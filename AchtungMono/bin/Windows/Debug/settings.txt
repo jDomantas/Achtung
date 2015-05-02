@@ -1,0 +1,38 @@
+# valid input types:
+# wasd (a and d)
+# arrows (left and right)
+# arrows2 (up and left)
+# az
+# bn
+# 69 (numpad)
+# 02 (numpad)
+# gamepad1, gamepad2, gamepad12, gamepad22
+
+# player gamepad2 128 255 128
+# player gamepad1 128 128 255
+# player 02 255 128 128
+
+# team description: 
+# team [name] [r] [g] [b]
+team Team1 255 128 128
+team t2 128 128 255
+
+# player description: 
+# either
+#     player [controls] [r] [g] [b]
+# or
+#     player [controls] [team name]
+player wasd Team1
+player bn Team1
+player bn Team1
+player bn Team1
+player bn Team1
+player bn Team1
+player arrows t2 255 255 255
+
+# time between powerups in ticks (1/60 sec)
+# will be between delay and 2*delay
+powerupdelay 210
+
+# difference in hue between team members
+teamcolorspacing 5
