@@ -1,3 +1,7 @@
+# source code at: https://github.com/jDomantas/Achtung
+# pause game with escape
+# exit game with alt+f4 :)
+
 # valid input types:
 # wasd (a and d)
 # arrows (left and right)
@@ -6,11 +10,11 @@
 # bn
 # 69 (numpad)
 # 02 (numpad)
-# gamepad1, gamepad2, gamepad12, gamepad22
+# gamepad1, gamepad2 (uses dpad)
+# gamepad12, gamepad22 (uses A and B)
 
-# player gamepad2 128 255 128
-# player gamepad1 128 128 255
-# player 02 255 128 128
+# gamepad controls work only with xbox controllers
+# use x360ce to emulate xbox controllers with other crap
 
 # team description: 
 # team [name] [r] [g] [b]
@@ -22,12 +26,9 @@ team t2 128 128 255
 #     player [controls] [r] [g] [b]
 # or
 #     player [controls] [team name]
+# or
+#     player [controls] [team name] [r] [g] [b]
 player wasd Team1
-player bn Team1
-player bn Team1
-player bn Team1
-player bn Team1
-player bn Team1
 player arrows t2 255 255 255
 
 # time between powerups in ticks (1/60 sec)
@@ -35,4 +36,6 @@ player arrows t2 255 255 255
 powerupdelay 210
 
 # difference in hue between team members
+# automatic color suggestion is quite shitty,
+# i suggest selecting colors manually
 teamcolorspacing 5
