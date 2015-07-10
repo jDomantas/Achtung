@@ -224,8 +224,6 @@ namespace AchtungXNA
 
             UpdatePowerUps(game);
 
-            Vector2 oldPos = Position;
-
             float rot = RotationSpeed;
             if (SlowTurnTimer > 0) rot /= 3;
 
@@ -239,10 +237,39 @@ namespace AchtungXNA
             speed.Y = (float)(Math.Sin(Angle) * CurrentSpeed);
 
             Position += speed;
+            
+            if (WallhackTimer > 0) {
+                Vector2 deltaPos = new Vector2(0, 0);
+                if (Position.X > Game1.ScreenWidth)
+                    deltaPos.X = -Game1.ScreenWidth;
+                if (Position.X < 0)
+                    deltaPos.X = +Game1.ScreenWidth;
+                if (Position.Y > Game1.ScreenHeight)
+                    deltaPos.Y = -Game1.ScreenHeight;
+                if (Position.Y < 0)
+                    deltaPos.Y = +Game1.ScreenHeight;
+                
+                if (deltaPos != Vector2.Zero) {
+                    Wall wall = new Wall(LastPos, Position, Color, game.Ticks, this);
+                    game.Walls.Add(wall);
+                    DropParticle(game, (wall.p1 + wall.p2) / 2);
+                    //game.Particles.Add(new Particle((wall.p1 + wall.p2) / 2, game.GetVector(0.1f), Color));
+                    if (LastWallDeployed != null)
+                        game.Walls.Add(new Wall((wall.p1 + wall.p2) / 2, (LastWallDeployed.p1 + LastWallDeployed.p2) / 2, Color, game.Ticks, this));
+                    LastWallDeployed = null;// wall;
+                                        
+                    Position += deltaPos;
+                    LastPos += deltaPos;
+                    OlderPos += deltaPos;
+                }
+            }
 
             foreach (Wall wall in game.Walls)
             {
-                if ((game.Ticks - wall.LayTime < 30 && wall.IsOwner(this)) || (wall.Owner != null && WallhackTimer > 0))
+                if ((WallhackTimer > 0) && (wall.Owner == null))
+                    continue;
+
+                if ((game.Ticks - wall.LayTime < 30 && wall.IsOwner(this)) || (WallhackTimer > 0))
                     continue;
 
                 Vector2 e, f, g;
