@@ -96,8 +96,11 @@ namespace AchtungXNA
 
                     for (int i = 0; i < players.Count; i++)
                     {
-                        players[i].WallhackTimer = 15;
-                        players[i].HideIcons = 16;
+                        if (players[i].WallhackTimer < 15)
+                        {
+                            players[i].WallhackTimer = 15;
+                            players[i].HideIcons = 16;   
+                        }
                         players[i].LayWall(game, true);
                         players[i].OlderPos = players[i].LastPos;
                         players[i].LastPos = players[i].Position;
