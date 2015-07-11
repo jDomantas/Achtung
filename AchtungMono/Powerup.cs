@@ -98,13 +98,7 @@ namespace AchtungXNA
                     {
                         players[i].WallhackTimer = 15;
                         players[i].HideIcons = 16;
-                        Wall wall = new Wall(players[i].LastPos, players[i].Position, players[i].Color, game.Ticks, players[i]);
-                        game.Walls.Add(wall);
-                        players[i].DropParticle(game, (wall.p1 + wall.p2) / 2);
-                        //game.Particles.Add(new Particle((wall.p1 + wall.p2) / 2, game.GetVector(0.1f), players[i].Color));
-                        if (players[i].LastWallDeployed != null)
-                            game.Walls.Add(new Wall((wall.p1 + wall.p2) / 2, (players[i].LastWallDeployed.p1 + players[i].LastWallDeployed.p2) / 2, players[i].Color, game.Ticks, players[i]));
-                        players[i].LastWallDeployed = null;// wall;
+                        players[i].LayWall(game, true);
                         players[i].OlderPos = players[i].LastPos;
                         players[i].LastPos = players[i].Position;
                         players[i].LayWallDelay = 0;

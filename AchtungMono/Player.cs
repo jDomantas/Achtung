@@ -238,7 +238,8 @@ namespace AchtungXNA
 
             Position += speed;
             
-            if (WallhackTimer > 0) {
+            if (WallhackTimer > 0)
+            {
                 Vector2 deltaPos = new Vector2(0, 0);
                 if (Position.X > Game1.ScreenWidth)
                     deltaPos.X = -Game1.ScreenWidth;
@@ -249,15 +250,9 @@ namespace AchtungXNA
                 if (Position.Y < 0)
                     deltaPos.Y = +Game1.ScreenHeight;
                 
-                if (deltaPos != Vector2.Zero) {
-                    Wall wall = new Wall(LastPos, Position, Color, game.Ticks, this);
-                    game.Walls.Add(wall);
-                    DropParticle(game, (wall.p1 + wall.p2) / 2);
-                    //game.Particles.Add(new Particle((wall.p1 + wall.p2) / 2, game.GetVector(0.1f), Color));
-                    if (LastWallDeployed != null)
-                        game.Walls.Add(new Wall((wall.p1 + wall.p2) / 2, (LastWallDeployed.p1 + LastWallDeployed.p2) / 2, Color, game.Ticks, this));
-                    LastWallDeployed = null;// wall;
-                                        
+                if (deltaPos != Vector2.Zero)
+                {
+                    LayWall(game, true);                                        
                     Position += deltaPos;
                     LastPos += deltaPos;
                     OlderPos += deltaPos;
@@ -297,7 +292,7 @@ namespace AchtungXNA
                         return;
                     }
                 }
-            }/**/
+            }
 
             if (LayWallDelay < 0)
             {
@@ -308,31 +303,17 @@ namespace AchtungXNA
             GapTimer--;
             if (LayWallDelay > 6)
             {
-                Wall wall = new Wall(LastPos, Position, Color, game.Ticks, this);
-                game.Walls.Add(wall);
-                DropParticle(game, (wall.p1 + wall.p2) / 2);
-                if (LastWallDeployed != null)
-                    game.Walls.Add(new Wall((wall.p1 + wall.p2) / 2, (LastWallDeployed.p1 + LastWallDeployed.p2) / 2, Color, game.Ticks, this));
-                LastWallDeployed = wall;
+                LayWall(game, false);                
                 OlderPos = LastPos;
                 LastPos = Position;
                 LayWallDelay = 0;
             }
-            else
+            else if (GapTimer < 0)
             {
-                if (GapTimer < 0)
-                {
-                    GapTimer = game.rnd.Next(800) + 80;
-
-                    Wall wall = new Wall(LastPos, Position, Color, game.Ticks, this);
-                    game.Walls.Add(wall);
-                    game.Particles.Add(new Particle((wall.p1 + wall.p2) / 2, game.GetVector(0.1f), Color));
-                    if (LastWallDeployed != null)
-                        game.Walls.Add(new Wall((wall.p1 + wall.p2) / 2, (LastWallDeployed.p1 + LastWallDeployed.p2) / 2, Color, game.Ticks, this));
-                    LastWallDeployed = null;
-                    LastPos = OlderPos = Position;
-                    LayWallDelay = -8;
-                }
+                GapTimer = game.rnd.Next(800) + 80;
+                LayWall(game, true);
+                OlderPos = LastPos = Position;
+                LayWallDelay = -8;
             }
 
             if (PartyTimer > 0)
@@ -410,10 +391,18 @@ namespace AchtungXNA
                 }
             }
         }
+        
+        public void LayWall(Game1 game, bool discontinuity) {
+            Wall wall = new Wall(LastPos, Position, Color, game.Ticks, this);
+            game.Walls.Add(wall);
+            DropParticle(game, (wall.p1 + wall.p2) / 2);
+            if (LastWallDeployed != null)
+                game.Walls.Add(new Wall((wall.p1 + wall.p2) / 2, (LastWallDeployed.p1 + LastWallDeployed.p2) / 2, Color, game.Ticks, this));
+            LastWallDeployed = !discontinuity ? wall : null;
+        }
 
-        public void DropParticle(Game1 game, Vector2 pos)
+        public void DropParticle(Game1 game, Vector2 pos, Color c)
         {
-            Color c = Color;
             float speed = 0.1f;
             if (PartyTimer > 0)
             {
@@ -433,6 +422,10 @@ namespace AchtungXNA
                 }
             }
             game.Particles.Add(new Particle(pos, game.GetVector(speed), c));
+        }
+        
+        public void DropParticle(Game1 game, Vector2 pos) {
+            DropParticle(game, pos, Color);
         }
     }
 }
