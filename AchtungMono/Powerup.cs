@@ -133,8 +133,11 @@ namespace AchtungXNA
                     List<Player> enemies = game.Players.Where(p => !p.Dead && (p.Team != player.Team)).ToList();
                     Player enemy = enemies[game.rnd.Next(enemies.Count)];
                     
-                    enemy.WallhackTimer = 15;
-                    enemy.HideIcons = 16;
+                    if (enemy.WallhackTimer < 15)
+                    {
+                        enemy.WallhackTimer = 15;
+                        enemy.HideIcons = 16;   
+                    }
                     enemy.LayWall(game, true);
                     Vector2 oldPos = enemy.Position;
                     float oldAngle = enemy.Angle;
