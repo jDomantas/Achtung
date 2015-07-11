@@ -56,6 +56,8 @@ namespace AchtungXNA
 
         public Vector2 Position;
         public float Angle;
+        public Vector2 ReversePos;
+        public float ReverseAngle;
         public ControlsType Controls;
         public Color Color;
         public int LayWallDelay;
@@ -111,8 +113,9 @@ namespace AchtungXNA
             Counter++;
             ID = Counter;
 
-            OlderPos = LastPos = Position = pos;
+            OlderPos = LastPos = Position = ReversePos = pos;
             Angle = angle;
+            ReverseAngle = angle + (float)Math.PI;
             Controls = controls;
             Color = color;
             CurrentSpeed = TargetSpeed = Speed;

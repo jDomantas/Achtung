@@ -11,7 +11,7 @@ namespace AchtungXNA
     {
         public static Texture2D Textures;
 
-        public enum PowerupType { Confuse = 0, Speed = 1, Slow = 2, Wallhack = 3, SlowTurn = 4, Satan = 5, Party = 6 }
+        public enum PowerupType { Confuse = 0, Speed = 1, Slow = 2, Wallhack = 3, SlowTurn = 4, Satan = 5, Party = 6, Reverse = 7 }
 
         public const int Radius = 10, LifeTime = 20;
 
@@ -124,6 +124,23 @@ namespace AchtungXNA
                     {
                         players[i].OlderPos = players[i].LastPos;
                         players[i].LastPos = players[i].Position;
+                    }
+                    break;
+                case PowerupType.Reverse:
+                    List<Player> enemies = game.Players.Where(p => !p.Dead && (p.Team != player.Team)).ToList();
+                    
+                    for (int i = 0; i < enemies.Count; i++)
+                    {
+                        enemies[i].WallhackTimer = 15;
+                        enemies[i].HideIcons = 16;
+                        enemies[i].LayWall(game, true);
+                        Vector2 oldPos = enemies[i].Position;
+                        float oldAngle = enemies[i].Angle;
+                        enemies[i].OlderPos = enemies[i].LastPos = enemies[i].Position = enemies[i].ReversePos;
+                        enemies[i].Angle = enemies[i].ReverseAngle;
+                        enemies[i].ReversePos = oldPos;
+                        enemies[i].ReverseAngle = oldAngle;
+                        enemies[i].LayWallDelay = 0;
                     }
                     break;
             }
