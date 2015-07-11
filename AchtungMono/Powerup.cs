@@ -131,20 +131,18 @@ namespace AchtungXNA
                     break;
                 case PowerupType.Reverse:
                     List<Player> enemies = game.Players.Where(p => !p.Dead && (p.Team != player.Team)).ToList();
+                    Player enemy = enemies[game.rnd.Next(enemies.Count)];
                     
-                    for (int i = 0; i < enemies.Count; i++)
-                    {
-                        enemies[i].WallhackTimer = 15;
-                        enemies[i].HideIcons = 16;
-                        enemies[i].LayWall(game, true);
-                        Vector2 oldPos = enemies[i].Position;
-                        float oldAngle = enemies[i].Angle;
-                        enemies[i].OlderPos = enemies[i].LastPos = enemies[i].Position = enemies[i].ReversePos;
-                        enemies[i].Angle = enemies[i].ReverseAngle;
-                        enemies[i].ReversePos = oldPos;
-                        enemies[i].ReverseAngle = oldAngle;
-                        enemies[i].LayWallDelay = 0;
-                    }
+                    enemy.WallhackTimer = 15;
+                    enemy.HideIcons = 16;
+                    enemy.LayWall(game, true);
+                    Vector2 oldPos = enemy.Position;
+                    float oldAngle = enemy.Angle;
+                    enemy.OlderPos = enemy.LastPos = enemy.Position = enemy.ReversePos;
+                    enemy.Angle = enemy.ReverseAngle;
+                    enemy.ReversePos = oldPos;
+                    enemy.ReverseAngle = oldAngle;
+                    enemy.LayWallDelay = 0;
                     break;
             }
         }
