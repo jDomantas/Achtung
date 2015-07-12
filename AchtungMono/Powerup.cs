@@ -131,6 +131,10 @@ namespace AchtungXNA
                     break;
                 case PowerupType.Reverse:
                     List<Player> enemies = game.Players.Where(p => !p.Dead && (p.Team != player.Team)).ToList();
+                    
+                    if (enemies.Count == 0)
+                        return;
+                    
                     Player enemy = enemies[game.rnd.Next(enemies.Count)];
                     
                     if (enemy.WallhackTimer < 15)
