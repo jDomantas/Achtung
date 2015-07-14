@@ -25,6 +25,7 @@ namespace AchtungXNA
             Gamepad2,
             Gamepad12,
             Gamepad22,
+            Mouse,
             Undefined
         };
 
@@ -43,6 +44,7 @@ namespace AchtungXNA
                 case "gamepad2": return ControlsType.Gamepad2;
                 case "gamepad12": return ControlsType.Gamepad12;
                 case "gamepad22": return ControlsType.Gamepad22;
+                case "mouse": return ControlsType.Mouse;
                 default: return ControlsType.Undefined;
             }
         }
@@ -174,6 +176,11 @@ namespace AchtungXNA
                     GamePadState gamepad4 = GamePad.GetState(PlayerIndex.Two);
                     if (gamepad4.Buttons.A == ButtonState.Pressed) input += 2;
                     if (gamepad4.Buttons.B == ButtonState.Pressed) input++;
+                    break;
+                case ControlsType.Mouse:
+                    MouseState mouse = Mouse.GetState();
+                    if (mouse.LeftButton == ButtonState.Pressed) input += 2;
+                    if (mouse.RightButton == ButtonState.Pressed) input++;
                     break;
             }
 
