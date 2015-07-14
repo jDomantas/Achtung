@@ -11,7 +11,7 @@ namespace AchtungXNA
     {
         public static Texture2D Textures;
 
-        public enum PowerupType { Confuse = 0, Speed = 1, Slow = 2, Wallhack = 3, SlowTurn = 4, Satan = 5, Party = 6, Reverse = 7 }
+        public enum PowerupType { Confuse = 0, Speed = 1, Slow = 2, Wallhack = 3, SlowTurn = 4, Satan = 5, Party = 6, Reverse = 7, OneDirection = 8 }
 
         public const int Radius = 10, LifeTime = 20;
 
@@ -60,6 +60,10 @@ namespace AchtungXNA
         {
             ShouldBeRemoved = true;
 
+            List<Player> enemies;
+            List<Player> players;
+            Player enemy;
+            
             switch (Type)
             {
                 case PowerupType.Confuse:
@@ -92,7 +96,7 @@ namespace AchtungXNA
                     }
                     break;
                 case PowerupType.Satan:
-                    List<Player> players = game.Players.Where(p => !p.Dead).ToList();
+                    players = game.Players.Where(p => !p.Dead).ToList();
 
                     for (int i = 0; i < players.Count; i++)
                     {
@@ -130,12 +134,12 @@ namespace AchtungXNA
                     }
                     break;
                 case PowerupType.Reverse:
-                    List<Player> enemies = game.Players.Where(p => !p.Dead && (p.Team != player.Team)).ToList();
+                    enemies = game.Players.Where(p => !p.Dead && (p.Team != player.Team)).ToList();
                     
                     if (enemies.Count == 0)
                         return;
                     
-                    Player enemy = enemies[game.rnd.Next(enemies.Count)];
+                    enemy = enemies[game.rnd.Next(enemies.Count)];
                     
                     if (enemy.WallhackTimer < 15)
                     {
@@ -150,6 +154,17 @@ namespace AchtungXNA
                     enemy.ReversePos = oldPos;
                     enemy.ReverseAngle = oldAngle;
                     enemy.LayWallDelay = 0;
+                    break;
+                case PowerupType.OneDirection:
+                    enemies = game.Players.Where(p => !p.Dead && (p.Team != player.Team)).ToList();
+                    
+                    if (enemies.Count == 0)
+                        return;
+                    
+                    enemy = enemies[game.rnd.Next(enemies.Count)];
+                    if (enemy.OneDirectionTimer == 0)
+                        enemy.OneDirectionMask = 0;
+                    enemy.OneDirectionTimer = 420;
                     break;
             }
         }

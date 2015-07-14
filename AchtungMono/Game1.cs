@@ -141,6 +141,8 @@ namespace AchtungXNA
                 Players[i].SlowTurnTimer = 0;
                 Players[i].HideIcons = 0;
                 Players[i].PartyTimer = 0;
+                Players[i].OneDirectionTimer = 0;
+                Players[i].OneDirectionMask = 0;
             }
 
             for (int i = 0; i < Teams.Count; i++)
@@ -256,7 +258,7 @@ namespace AchtungXNA
                     Vector2 pos = GetPlayerPosition();
                     int x = (int)pos.X;
                     int y = (int)pos.Y;
-                    int type = rnd.Next(8); // (int)Powerup.PowerupType.Reverse; 
+                    int type = rnd.Next(9); //(int)Powerup.PowerupType.OneDirection; 
                     Powerups.Add(new Powerup(x, y, (Powerup.PowerupType)type));
 
                     PowerUpDelay = PowerupDelayValue + rnd.Next(PowerupDelayValue);

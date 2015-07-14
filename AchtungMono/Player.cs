@@ -77,6 +77,8 @@ namespace AchtungXNA
         public int SlowTurnTimer;
         public int HideIcons;
         public int PartyTimer;
+        public int OneDirectionTimer;
+        public int OneDirectionMask;
         public int ID;
         public Team Team;
         public bool ForceColor = false;
@@ -183,16 +185,10 @@ namespace AchtungXNA
                     if (mouse.RightButton == ButtonState.Pressed) input |= 1;
                     break;
             }
-
-            if (IsConfused())
-                input = ((input & 1) << 1) | ((input & 2) >> 1);
+            
+            if (input == 3) input = 0;
 
             return input;
-        }
-
-        public bool IsConfused()
-        {
-            return ConfuseTimer > 0;
         }
 
         public void UpdatePowerUps(Game1 game)
@@ -205,6 +201,8 @@ namespace AchtungXNA
                 SlowTurnTimer--;
             if (PartyTimer > 0)
                 PartyTimer--;
+            if (OneDirectionTimer > 0)
+                OneDirectionTimer--;
             if (HideIcons > 0)
                 HideIcons--;
 
@@ -231,6 +229,15 @@ namespace AchtungXNA
         public void Update(Game1 game)
         {
             int input = GetInput();
+            
+            if (OneDirectionTimer > 0) {
+                if (OneDirectionMask == 0)
+                    OneDirectionMask = input;
+                input &= OneDirectionMask;
+            }
+            
+            if (ConfuseTimer > 0)
+                input = ((input & 1) << 1) | ((input & 2) >> 1);
 
             UpdatePowerUps(game);
 
@@ -398,6 +405,11 @@ namespace AchtungXNA
                 {
                     sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, (int)Position.Y - 20, 21, 21),
                         new Rectangle(84, 21, 21, 21), Color.White);
+                }
+                if (OneDirectionTimer > 180 || (OneDirectionTimer / 15) % 2 == 1)
+                {
+                    sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, (int)Position.Y - 20, 21, 21),
+                        new Rectangle(168, 21, 21, 21), Color.White);
                 }
             }
         }
