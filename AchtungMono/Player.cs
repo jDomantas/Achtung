@@ -381,35 +381,48 @@ namespace AchtungXNA
 
             if (HideIcons == 0)
             {
-                if (ConfuseTimer > 180 || (ConfuseTimer / 15) % 2 == 1)
+                int y = (int)Position.Y - 20;
+                if (ConfuseTimer > 0)
                 {
-                    sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, (int)Position.Y - 20, 21, 21),
-                        new Rectangle(0, 21, 21, 21), Color.White);
+                    if ((ConfuseTimer > 180) || (ConfuseTimer / 15) % 2 == 1)
+                        sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, y, 21, 21),
+                            new Rectangle(0, 21, 21, 21), Color.White);
+                    y -= 10;
                 }
-                if (SpeedTimer > 180 || (SpeedTimer / 15) % 2 == 1)
+                if (SpeedTimer > 0)
                 {
-                    sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, (int)Position.Y - 20, 21, 21),
-                        new Rectangle(21, 21, 21, 21), Color.White);
+                    if ((SpeedTimer > 180) || (SpeedTimer / 15) % 2 == 1)
+                        sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, y, 21, 21),
+                            new Rectangle(21, 21, 21, 21), Color.White);
+                    y -= 10;
                 }
-                if (SlowTimer > 180 || (SlowTimer / 15) % 2 == 1)
+                if (SlowTimer > 0)
                 {
-                    sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, (int)Position.Y - 20, 21, 21),
-                        new Rectangle(42, 21, 21, 21), Color.White);
+                    if ((SlowTimer > 180) || (SlowTimer / 15) % 2 == 1)
+                        sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, y, 21, 21),
+                            new Rectangle(42, 21, 21, 21), Color.White);
+                    y -= 10;
                 }
-                if (WallhackTimer > 180 || (WallhackTimer / 15) % 2 == 1)
+                if (WallhackTimer > 0)
                 {
-                    sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, (int)Position.Y - 20, 21, 21),
-                        new Rectangle(63, 21, 21, 21), Color.White);
+                    if ((WallhackTimer > 180) || (WallhackTimer / 15) % 2 == 1)
+                        sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, y, 21, 21),
+                            new Rectangle(63, 21, 21, 21), Color.White);
+                    y -= 10;
                 }
-                if (SlowTurnTimer > 180 || (SlowTurnTimer / 15) % 2 == 1)
+                if (SlowTurnTimer > 0)
                 {
-                    sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, (int)Position.Y - 20, 21, 21),
-                        new Rectangle(84, 21, 21, 21), Color.White);
+                    if ((SlowTurnTimer > 180) || (SlowTurnTimer / 15) % 2 == 1)
+                        sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, y, 21, 21),
+                            new Rectangle(84, 21, 21, 21), Color.White);
+                    y -= 10;
                 }
-                if (OneDirectionTimer > 180 || (OneDirectionTimer / 15) % 2 == 1)
+                if (OneDirectionTimer > 0)
                 {
-                    sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, (int)Position.Y - 20, 21, 21),
-                        new Rectangle(168, 21, 21, 21), Color.White);
+                    if ((OneDirectionTimer > 180) || (OneDirectionTimer / 15) % 2 == 1)
+                        sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, y, 21, 21),
+                            new Rectangle(168, 21, 21, 21), Color.White);
+                    y -= 10;
                 }
             }
         }
