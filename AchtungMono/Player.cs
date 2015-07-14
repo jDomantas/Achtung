@@ -130,57 +130,57 @@ namespace AchtungXNA
             switch (Controls)
             {
                 case ControlsType.Arrows:
-                    if (keys.IsKeyDown(Keys.Left)) input += 2;
-                    if (keys.IsKeyDown(Keys.Right)) input++;
+                    if (keys.IsKeyDown(Keys.Left)) input |= 2;
+                    if (keys.IsKeyDown(Keys.Right)) input |= 1;
                     break;
                 case ControlsType.WASD:
-                    if (keys.IsKeyDown(Keys.A)) input += 2;
-                    if (keys.IsKeyDown(Keys.D)) input++;
+                    if (keys.IsKeyDown(Keys.A)) input |= 2;
+                    if (keys.IsKeyDown(Keys.D)) input |= 1;
                     break;
                 case ControlsType.Numpad69:
-                    if (keys.IsKeyDown(Keys.NumPad6)) input += 2;
-                    if (keys.IsKeyDown(Keys.NumPad9)) input++;
+                    if (keys.IsKeyDown(Keys.NumPad6)) input |= 2;
+                    if (keys.IsKeyDown(Keys.NumPad9)) input |= 1;
                     break;
                 case ControlsType.AZ:
-                    if (keys.IsKeyDown(Keys.A)) input += 2;
-                    if (keys.IsKeyDown(Keys.Z)) input++;
+                    if (keys.IsKeyDown(Keys.A)) input |= 2;
+                    if (keys.IsKeyDown(Keys.Z)) input |= 1;
                     break;
                 case ControlsType.BN:
-                    if (keys.IsKeyDown(Keys.B)) input += 2;
-                    if (keys.IsKeyDown(Keys.N)) input++;
+                    if (keys.IsKeyDown(Keys.B)) input |= 2;
+                    if (keys.IsKeyDown(Keys.N)) input |= 1;
                     break;
                 case ControlsType.Arrows2:
-                    if (keys.IsKeyDown(Keys.Left)) input += 2;
-                    if (keys.IsKeyDown(Keys.Down)) input++;
+                    if (keys.IsKeyDown(Keys.Left)) input |= 2;
+                    if (keys.IsKeyDown(Keys.Down)) input |= 1;
                     break;
                 case ControlsType.Numpad02:
-                    if (keys.IsKeyDown(Keys.NumPad0)) input += 2;
-                    if (keys.IsKeyDown(Keys.NumPad2)) input++;
+                    if (keys.IsKeyDown(Keys.NumPad0)) input |= 2;
+                    if (keys.IsKeyDown(Keys.NumPad2)) input |= 1;
                     break;
                 case ControlsType.Gamepad1:
                     GamePadState gamepad = GamePad.GetState(PlayerIndex.One);
-                    if (gamepad.DPad.Left == ButtonState.Pressed) input += 2;
-                    if (gamepad.DPad.Right == ButtonState.Pressed) input++;
+                    if (gamepad.DPad.Left == ButtonState.Pressed) input |= 2;
+                    if (gamepad.DPad.Right == ButtonState.Pressed) input |= 1;
                     break;
                 case ControlsType.Gamepad2:
                     GamePadState gamepad2 = GamePad.GetState(PlayerIndex.Two);
-                    if (gamepad2.DPad.Left == ButtonState.Pressed) input += 2;
-                    if (gamepad2.DPad.Right == ButtonState.Pressed) input++;
+                    if (gamepad2.DPad.Left == ButtonState.Pressed) input |= 2;
+                    if (gamepad2.DPad.Right == ButtonState.Pressed) input |= 1;
                     break;
                 case ControlsType.Gamepad12:
                     GamePadState gamepad3 = GamePad.GetState(PlayerIndex.One);
-                    if (gamepad3.Buttons.A == ButtonState.Pressed) input += 2;
-                    if (gamepad3.Buttons.B == ButtonState.Pressed) input++;
+                    if (gamepad3.Buttons.A == ButtonState.Pressed) input |= 2;
+                    if (gamepad3.Buttons.B == ButtonState.Pressed) input |= 1;
                     break;
                 case ControlsType.Gamepad22:
                     GamePadState gamepad4 = GamePad.GetState(PlayerIndex.Two);
-                    if (gamepad4.Buttons.A == ButtonState.Pressed) input += 2;
-                    if (gamepad4.Buttons.B == ButtonState.Pressed) input++;
+                    if (gamepad4.Buttons.A == ButtonState.Pressed) input |= 2;
+                    if (gamepad4.Buttons.B == ButtonState.Pressed) input |= 1;
                     break;
                 case ControlsType.Mouse:
                     MouseState mouse = Mouse.GetState();
-                    if (mouse.LeftButton == ButtonState.Pressed) input += 2;
-                    if (mouse.RightButton == ButtonState.Pressed) input++;
+                    if (mouse.LeftButton == ButtonState.Pressed) input |= 2;
+                    if (mouse.RightButton == ButtonState.Pressed) input |= 1;
                     break;
             }
 
