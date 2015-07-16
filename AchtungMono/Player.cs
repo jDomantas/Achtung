@@ -20,6 +20,7 @@ namespace AchtungXNA
             Numpad02, // 0 and 2
             AZ, // a and z
             BN, // b and n
+            P0, // p and 0
             Arrows2, // left and down arrows
             Gamepad1,
             Gamepad2,
@@ -38,6 +39,7 @@ namespace AchtungXNA
                 case "arrows2": return ControlsType.Arrows2;
                 case "az": return ControlsType.AZ;
                 case "bn": return ControlsType.BN;
+                case "p0": return ControlsType.P0;
                 case "69": return ControlsType.Numpad69;
                 case "02": return ControlsType.Numpad02;
                 case "gamepad1": return ControlsType.Gamepad1;
@@ -151,8 +153,12 @@ namespace AchtungXNA
                     if (keys.IsKeyDown(Keys.B)) input |= 2;
                     if (keys.IsKeyDown(Keys.N)) input |= 1;
                     break;
+                case ControlsType.P0:
+                    if (keys.IsKeyDown(Keys.P)) input |= 2;
+                    if (keys.IsKeyDown(Keys.D0)) input |= 1;
+                    break;
                 case ControlsType.Arrows2:
-                    if (keys.IsKeyDown(Keys.Left)) input |= 2;
+                    if (keys.IsKeyDown(Keys.Up)) input |= 2;
                     if (keys.IsKeyDown(Keys.Down)) input |= 1;
                     break;
                 case ControlsType.Numpad02:
