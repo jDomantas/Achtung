@@ -127,8 +127,9 @@ namespace AchtungXNA
 
             for (int i = 0; i < Players.Count; i++)
             {
-                Players[i].OlderPos = Players[i].LastPos = Players[i].Position = GetPlayerPosition();
+                Players[i].ReversePos = Players[i].OlderPos = Players[i].LastPos = Players[i].Position = GetPlayerPosition();
                 Players[i].Angle = (float)rnd.NextDouble() * MathHelper.TwoPi;
+                Players[i].ReverseAngle = Players[i].Angle + (float)Math.PI;
                 Players[i].LayWallDelay = 0;
                 Players[i].LastWallDeployed = null;
                 Players[i].Dead = false;
@@ -140,6 +141,8 @@ namespace AchtungXNA
                 Players[i].SlowTurnTimer = 0;
                 Players[i].HideIcons = 0;
                 Players[i].PartyTimer = 0;
+                Players[i].OneDirectionTimer = 0;
+                Players[i].OneDirectionMask = 0;
             }
 
             for (int i = 0; i < Teams.Count; i++)
@@ -253,9 +256,9 @@ namespace AchtungXNA
                 else
                 {
                     Vector2 pos = GetPlayerPosition();
-                    int x = (int)pos.X;// rnd.Next(ScreenWidth - 100) + 50;
-                    int y = (int)pos.Y;// rnd.Next(ScreenHeight - 100) + 50;
-                    int type = /*(int)Powerup.PowerupType.Satan; */ rnd.Next(7);
+                    int x = (int)pos.X;
+                    int y = (int)pos.Y;
+                    int type = rnd.Next(9); //(int)Powerup.PowerupType.OneDirection; 
                     Powerups.Add(new Powerup(x, y, (Powerup.PowerupType)type));
 
                     PowerUpDelay = PowerupDelayValue + rnd.Next(PowerupDelayValue);

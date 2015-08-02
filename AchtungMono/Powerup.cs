@@ -11,7 +11,7 @@ namespace AchtungXNA
     {
         public static Texture2D Textures;
 
-        public enum PowerupType { Confuse = 0, Speed = 1, Slow = 2, Wallhack = 3, SlowTurn = 4, Satan = 5, Party = 6 }
+        public enum PowerupType { Confuse = 0, Speed = 1, Slow = 2, Wallhack = 3, SlowTurn = 4, Satan = 5, Party = 6, Reverse = 7, OneDirection = 8 }
 
         public const int Radius = 10, LifeTime = 20;
 
@@ -60,6 +60,10 @@ namespace AchtungXNA
         {
             ShouldBeRemoved = true;
 
+            List<Player> enemies;
+            List<Player> players;
+            Player enemy;
+            
             switch (Type)
             {
                 case PowerupType.Confuse:
@@ -92,19 +96,16 @@ namespace AchtungXNA
                     }
                     break;
                 case PowerupType.Satan:
-                    List<Player> players = game.Players.Where(p => !p.Dead).ToList();
+                    players = game.Players.Where(p => !p.Dead).ToList();
 
                     for (int i = 0; i < players.Count; i++)
                     {
-                        players[i].WallhackTimer = 15;
-                        players[i].HideIcons = 16;
-                        Wall wall = new Wall(players[i].LastPos, players[i].Position, players[i].Color, game.Ticks, players[i]);
-                        game.Walls.Add(wall);
-                        players[i].DropParticle(game, (wall.p1 + wall.p2) / 2);
-                        //game.Particles.Add(new Particle((wall.p1 + wall.p2) / 2, game.GetVector(0.1f), players[i].Color));
-                        if (players[i].LastWallDeployed != null)
-                            game.Walls.Add(new Wall((wall.p1 + wall.p2) / 2, (players[i].LastWallDeployed.p1 + players[i].LastWallDeployed.p2) / 2, players[i].Color, game.Ticks, players[i]));
-                        players[i].LastWallDeployed = null;// wall;
+                        if (players[i].WallhackTimer < 15)
+                        {
+                            players[i].WallhackTimer = 15;
+                            players[i].HideIcons = 16;   
+                        }
+                        players[i].LayWall(game, true);
                         players[i].OlderPos = players[i].LastPos;
                         players[i].LastPos = players[i].Position;
                         players[i].LayWallDelay = 0;
@@ -131,6 +132,39 @@ namespace AchtungXNA
                         players[i].OlderPos = players[i].LastPos;
                         players[i].LastPos = players[i].Position;
                     }
+                    break;
+                case PowerupType.Reverse:
+                    enemies = game.Players.Where(p => !p.Dead && (p.Team != player.Team)).ToList();
+                    
+                    if (enemies.Count == 0)
+                        return;
+                    
+                    enemy = enemies[game.rnd.Next(enemies.Count)];
+                    
+                    if (enemy.WallhackTimer < 15)
+                    {
+                        enemy.WallhackTimer = 15;
+                        enemy.HideIcons = 16;   
+                    }
+                    enemy.LayWall(game, true);
+                    Vector2 oldPos = enemy.Position;
+                    float oldAngle = enemy.Angle;
+                    enemy.OlderPos = enemy.LastPos = enemy.Position = enemy.ReversePos;
+                    enemy.Angle = enemy.ReverseAngle;
+                    enemy.ReversePos = oldPos;
+                    enemy.ReverseAngle = oldAngle;
+                    enemy.LayWallDelay = 0;
+                    break;
+                case PowerupType.OneDirection:
+                    enemies = game.Players.Where(p => !p.Dead && (p.Team != player.Team)).ToList();
+                    
+                    if (enemies.Count == 0)
+                        return;
+                    
+                    enemy = enemies[game.rnd.Next(enemies.Count)];
+                    if (enemy.OneDirectionTimer == 0)
+                        enemy.OneDirectionMask = 0;
+                    enemy.OneDirectionTimer = 420;
                     break;
             }
         }

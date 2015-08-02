@@ -20,11 +20,13 @@ namespace AchtungXNA
             Numpad02, // 0 and 2
             AZ, // a and z
             BN, // b and n
+            P0, // p and 0
             Arrows2, // left and down arrows
             Gamepad1,
             Gamepad2,
             Gamepad12,
             Gamepad22,
+            Mouse,
             Undefined
         };
 
@@ -37,12 +39,14 @@ namespace AchtungXNA
                 case "arrows2": return ControlsType.Arrows2;
                 case "az": return ControlsType.AZ;
                 case "bn": return ControlsType.BN;
+                case "p0": return ControlsType.P0;
                 case "69": return ControlsType.Numpad69;
                 case "02": return ControlsType.Numpad02;
                 case "gamepad1": return ControlsType.Gamepad1;
                 case "gamepad2": return ControlsType.Gamepad2;
                 case "gamepad12": return ControlsType.Gamepad12;
                 case "gamepad22": return ControlsType.Gamepad22;
+                case "mouse": return ControlsType.Mouse;
                 default: return ControlsType.Undefined;
             }
         }
@@ -56,6 +60,8 @@ namespace AchtungXNA
 
         public Vector2 Position;
         public float Angle;
+        public Vector2 ReversePos;
+        public float ReverseAngle;
         public ControlsType Controls;
         public Color Color;
         public int LayWallDelay;
@@ -73,6 +79,8 @@ namespace AchtungXNA
         public int SlowTurnTimer;
         public int HideIcons;
         public int PartyTimer;
+        public int OneDirectionTimer;
+        public int OneDirectionMask;
         public int ID;
         public Team Team;
         public bool ForceColor = false;
@@ -111,8 +119,9 @@ namespace AchtungXNA
             Counter++;
             ID = Counter;
 
-            OlderPos = LastPos = Position = pos;
+            OlderPos = LastPos = Position = ReversePos = pos;
             Angle = angle;
+            ReverseAngle = angle + (float)Math.PI;
             Controls = controls;
             Color = color;
             CurrentSpeed = TargetSpeed = Speed;
@@ -125,64 +134,67 @@ namespace AchtungXNA
             switch (Controls)
             {
                 case ControlsType.Arrows:
-                    if (keys.IsKeyDown(Keys.Left)) input += 2;
-                    if (keys.IsKeyDown(Keys.Right)) input++;
+                    if (keys.IsKeyDown(Keys.Left)) input |= 2;
+                    if (keys.IsKeyDown(Keys.Right)) input |= 1;
                     break;
                 case ControlsType.WASD:
-                    if (keys.IsKeyDown(Keys.A)) input += 2;
-                    if (keys.IsKeyDown(Keys.D)) input++;
+                    if (keys.IsKeyDown(Keys.A)) input |= 2;
+                    if (keys.IsKeyDown(Keys.D)) input |= 1;
                     break;
                 case ControlsType.Numpad69:
-                    if (keys.IsKeyDown(Keys.NumPad6)) input += 2;
-                    if (keys.IsKeyDown(Keys.NumPad9)) input++;
+                    if (keys.IsKeyDown(Keys.NumPad6)) input |= 2;
+                    if (keys.IsKeyDown(Keys.NumPad9)) input |= 1;
                     break;
                 case ControlsType.AZ:
-                    if (keys.IsKeyDown(Keys.A)) input += 2;
-                    if (keys.IsKeyDown(Keys.Z)) input++;
+                    if (keys.IsKeyDown(Keys.A)) input |= 2;
+                    if (keys.IsKeyDown(Keys.Z)) input |= 1;
                     break;
                 case ControlsType.BN:
-                    if (keys.IsKeyDown(Keys.B)) input += 2;
-                    if (keys.IsKeyDown(Keys.N)) input++;
+                    if (keys.IsKeyDown(Keys.B)) input |= 2;
+                    if (keys.IsKeyDown(Keys.N)) input |= 1;
+                    break;
+                case ControlsType.P0:
+                    if (keys.IsKeyDown(Keys.P)) input |= 2;
+                    if (keys.IsKeyDown(Keys.D0)) input |= 1;
                     break;
                 case ControlsType.Arrows2:
-                    if (keys.IsKeyDown(Keys.Left)) input += 2;
-                    if (keys.IsKeyDown(Keys.Down)) input++;
+                    if (keys.IsKeyDown(Keys.Up)) input |= 2;
+                    if (keys.IsKeyDown(Keys.Down)) input |= 1;
                     break;
                 case ControlsType.Numpad02:
-                    if (keys.IsKeyDown(Keys.NumPad0)) input += 2;
-                    if (keys.IsKeyDown(Keys.NumPad2)) input++;
+                    if (keys.IsKeyDown(Keys.NumPad0)) input |= 2;
+                    if (keys.IsKeyDown(Keys.NumPad2)) input |= 1;
                     break;
                 case ControlsType.Gamepad1:
                     GamePadState gamepad = GamePad.GetState(PlayerIndex.One);
-                    if (gamepad.DPad.Left == ButtonState.Pressed) input += 2;
-                    if (gamepad.DPad.Right == ButtonState.Pressed) input++;
+                    if (gamepad.DPad.Left == ButtonState.Pressed) input |= 2;
+                    if (gamepad.DPad.Right == ButtonState.Pressed) input |= 1;
                     break;
                 case ControlsType.Gamepad2:
                     GamePadState gamepad2 = GamePad.GetState(PlayerIndex.Two);
-                    if (gamepad2.DPad.Left == ButtonState.Pressed) input += 2;
-                    if (gamepad2.DPad.Right == ButtonState.Pressed) input++;
+                    if (gamepad2.DPad.Left == ButtonState.Pressed) input |= 2;
+                    if (gamepad2.DPad.Right == ButtonState.Pressed) input |= 1;
                     break;
                 case ControlsType.Gamepad12:
                     GamePadState gamepad3 = GamePad.GetState(PlayerIndex.One);
-                    if (gamepad3.Buttons.A == ButtonState.Pressed) input += 2;
-                    if (gamepad3.Buttons.B == ButtonState.Pressed) input++;
+                    if (gamepad3.Buttons.A == ButtonState.Pressed) input |= 2;
+                    if (gamepad3.Buttons.B == ButtonState.Pressed) input |= 1;
                     break;
                 case ControlsType.Gamepad22:
                     GamePadState gamepad4 = GamePad.GetState(PlayerIndex.Two);
-                    if (gamepad4.Buttons.A == ButtonState.Pressed) input += 2;
-                    if (gamepad4.Buttons.B == ButtonState.Pressed) input++;
+                    if (gamepad4.Buttons.A == ButtonState.Pressed) input |= 2;
+                    if (gamepad4.Buttons.B == ButtonState.Pressed) input |= 1;
+                    break;
+                case ControlsType.Mouse:
+                    MouseState mouse = Mouse.GetState();
+                    if (mouse.LeftButton == ButtonState.Pressed) input |= 2;
+                    if (mouse.RightButton == ButtonState.Pressed) input |= 1;
                     break;
             }
-
-            if (IsConfused())
-                input = ((input & 1) << 1) | ((input & 2) >> 1);
+            
+            if (input == 3) input = 0;
 
             return input;
-        }
-
-        public bool IsConfused()
-        {
-            return ConfuseTimer > 0;
         }
 
         public void UpdatePowerUps(Game1 game)
@@ -195,6 +207,8 @@ namespace AchtungXNA
                 SlowTurnTimer--;
             if (PartyTimer > 0)
                 PartyTimer--;
+            if (OneDirectionTimer > 0)
+                OneDirectionTimer--;
             if (HideIcons > 0)
                 HideIcons--;
 
@@ -221,10 +235,17 @@ namespace AchtungXNA
         public void Update(Game1 game)
         {
             int input = GetInput();
+            
+            if (OneDirectionTimer > 0) {
+                if (OneDirectionMask == 0)
+                    OneDirectionMask = input;
+                input &= OneDirectionMask;
+            }
+            
+            if (ConfuseTimer > 0)
+                input = ((input & 1) << 1) | ((input & 2) >> 1);
 
             UpdatePowerUps(game);
-
-            Vector2 oldPos = Position;
 
             float rot = RotationSpeed;
             if (SlowTurnTimer > 0) rot /= 3;
@@ -239,10 +260,34 @@ namespace AchtungXNA
             speed.Y = (float)(Math.Sin(Angle) * CurrentSpeed);
 
             Position += speed;
+            
+            if (WallhackTimer > 0)
+            {
+                Vector2 deltaPos = new Vector2(0, 0);
+                if (Position.X > Game1.ScreenWidth)
+                    deltaPos.X = -Game1.ScreenWidth;
+                if (Position.X < 0)
+                    deltaPos.X = +Game1.ScreenWidth;
+                if (Position.Y > Game1.ScreenHeight)
+                    deltaPos.Y = -Game1.ScreenHeight;
+                if (Position.Y < 0)
+                    deltaPos.Y = +Game1.ScreenHeight;
+                
+                if (deltaPos != Vector2.Zero)
+                {
+                    LayWall(game, true);                                        
+                    Position += deltaPos;
+                    LastPos += deltaPos;
+                    OlderPos += deltaPos;
+                }
+            }
 
             foreach (Wall wall in game.Walls)
             {
-                if ((game.Ticks - wall.LayTime < 30 && wall.IsOwner(this)) || (wall.Owner != null && WallhackTimer > 0))
+                if ((WallhackTimer > 0) && (wall.Owner == null))
+                    continue;
+
+                if ((game.Ticks - wall.LayTime < 30 && wall.IsOwner(this)) || (WallhackTimer > 0))
                     continue;
 
                 Vector2 e, f, g;
@@ -270,7 +315,7 @@ namespace AchtungXNA
                         return;
                     }
                 }
-            }/**/
+            }
 
             if (LayWallDelay < 0)
             {
@@ -281,31 +326,17 @@ namespace AchtungXNA
             GapTimer--;
             if (LayWallDelay > 6)
             {
-                Wall wall = new Wall(LastPos, Position, Color, game.Ticks, this);
-                game.Walls.Add(wall);
-                DropParticle(game, (wall.p1 + wall.p2) / 2);
-                if (LastWallDeployed != null)
-                    game.Walls.Add(new Wall((wall.p1 + wall.p2) / 2, (LastWallDeployed.p1 + LastWallDeployed.p2) / 2, Color, game.Ticks, this));
-                LastWallDeployed = wall;
+                LayWall(game, false);                
                 OlderPos = LastPos;
                 LastPos = Position;
                 LayWallDelay = 0;
             }
-            else
+            else if (GapTimer < 0)
             {
-                if (GapTimer < 0)
-                {
-                    GapTimer = game.rnd.Next(800) + 80;
-
-                    Wall wall = new Wall(LastPos, Position, Color, game.Ticks, this);
-                    game.Walls.Add(wall);
-                    game.Particles.Add(new Particle((wall.p1 + wall.p2) / 2, game.GetVector(0.1f), Color));
-                    if (LastWallDeployed != null)
-                        game.Walls.Add(new Wall((wall.p1 + wall.p2) / 2, (LastWallDeployed.p1 + LastWallDeployed.p2) / 2, Color, game.Ticks, this));
-                    LastWallDeployed = null;
-                    LastPos = OlderPos = Position;
-                    LayWallDelay = -8;
-                }
+                GapTimer = game.rnd.Next(800) + 80;
+                LayWall(game, true);
+                OlderPos = LastPos = Position;
+                LayWallDelay = -8;
             }
 
             if (PartyTimer > 0)
@@ -356,37 +387,63 @@ namespace AchtungXNA
 
             if (HideIcons == 0)
             {
-                if (ConfuseTimer > 180 || (ConfuseTimer / 15) % 2 == 1)
+                int y = (int)Position.Y - 20;
+                if (ConfuseTimer > 0)
                 {
-                    sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, (int)Position.Y - 20, 21, 21),
-                        new Rectangle(0, 21, 21, 21), Color.White);
+                    if ((ConfuseTimer > 180) || (ConfuseTimer / 15) % 2 == 1)
+                        sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, y, 21, 21),
+                            new Rectangle(0, 21, 21, 21), Color.White);
+                    y -= 10;
                 }
-                if (SpeedTimer > 180 || (SpeedTimer / 15) % 2 == 1)
+                if (SpeedTimer > 0)
                 {
-                    sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, (int)Position.Y - 20, 21, 21),
-                        new Rectangle(21, 21, 21, 21), Color.White);
+                    if ((SpeedTimer > 180) || (SpeedTimer / 15) % 2 == 1)
+                        sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, y, 21, 21),
+                            new Rectangle(21, 21, 21, 21), Color.White);
+                    y -= 10;
                 }
-                if (SlowTimer > 180 || (SlowTimer / 15) % 2 == 1)
+                if (SlowTimer > 0)
                 {
-                    sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, (int)Position.Y - 20, 21, 21),
-                        new Rectangle(42, 21, 21, 21), Color.White);
+                    if ((SlowTimer > 180) || (SlowTimer / 15) % 2 == 1)
+                        sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, y, 21, 21),
+                            new Rectangle(42, 21, 21, 21), Color.White);
+                    y -= 10;
                 }
-                if (WallhackTimer > 180 || (WallhackTimer / 15) % 2 == 1)
+                if (WallhackTimer > 0)
                 {
-                    sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, (int)Position.Y - 20, 21, 21),
-                        new Rectangle(63, 21, 21, 21), Color.White);
+                    if ((WallhackTimer > 180) || (WallhackTimer / 15) % 2 == 1)
+                        sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, y, 21, 21),
+                            new Rectangle(63, 21, 21, 21), Color.White);
+                    y -= 10;
                 }
-                if (SlowTurnTimer > 180 || (SlowTurnTimer / 15) % 2 == 1)
+                if (SlowTurnTimer > 0)
                 {
-                    sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, (int)Position.Y - 20, 21, 21),
-                        new Rectangle(84, 21, 21, 21), Color.White);
+                    if ((SlowTurnTimer > 180) || (SlowTurnTimer / 15) % 2 == 1)
+                        sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, y, 21, 21),
+                            new Rectangle(84, 21, 21, 21), Color.White);
+                    y -= 10;
+                }
+                if (OneDirectionTimer > 0)
+                {
+                    if ((OneDirectionTimer > 180) || (OneDirectionTimer / 15) % 2 == 1)
+                        sb.Draw(Powerup.Textures, new Rectangle((int)Position.X - Powerup.Radius, y, 21, 21),
+                            new Rectangle(168, 21, 21, 21), Color.White);
+                    y -= 10;
                 }
             }
         }
+        
+        public void LayWall(Game1 game, bool discontinuity) {
+            Wall wall = new Wall(LastPos, Position, Color, game.Ticks, this);
+            game.Walls.Add(wall);
+            DropParticle(game, (wall.p1 + wall.p2) / 2);
+            if (LastWallDeployed != null)
+                game.Walls.Add(new Wall((wall.p1 + wall.p2) / 2, (LastWallDeployed.p1 + LastWallDeployed.p2) / 2, Color, game.Ticks, this));
+            LastWallDeployed = !discontinuity ? wall : null;
+        }
 
-        public void DropParticle(Game1 game, Vector2 pos)
+        public void DropParticle(Game1 game, Vector2 pos, Color c)
         {
-            Color c = Color;
             float speed = 0.1f;
             if (PartyTimer > 0)
             {
@@ -406,6 +463,10 @@ namespace AchtungXNA
                 }
             }
             game.Particles.Add(new Particle(pos, game.GetVector(speed), c));
+        }
+        
+        public void DropParticle(Game1 game, Vector2 pos) {
+            DropParticle(game, pos, Color);
         }
     }
 }
